@@ -1,0 +1,13 @@
+llm:
+  provider: "groq"
+  model: "llama-3.3-70b-versatile"
+  temperature: 0.0
+
+agent:
+  max_iterations: 5
+  enable_reflection: true
+
+logging:
+  level: "DEBUG"
+  file_path: "logs/agent_run.log"
+  console_output: true

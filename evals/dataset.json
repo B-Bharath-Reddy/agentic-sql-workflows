@@ -1,0 +1,24 @@
+[
+  {
+    "query": "How many 1968 Ford Mustangs are currently in stock?",
+    "expected_components": {
+      "tools_called": [
+        "get_database_schema",
+        "execute_sql_query"
+      ],
+      "target_table": "products"
+    },
+    "expected_final_answer": "68"
+  },
+  {
+    "query": "Who is the sales representative for the customer named 'Mini Wheels Co.'?",
+    "expected_components": {
+      "tools_called": [
+        "get_database_schema",
+        "execute_sql_query"
+      ],
+      "target_table": "customers"
+    },
+    "expected_final_answer": "Leslie"
+  }
+]

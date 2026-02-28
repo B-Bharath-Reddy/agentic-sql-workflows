@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+ENV/
+
+# Env vars
+.env
+
+# Application Logs
+logs/
+
+# SQLite databases
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+
+# IDEs
+.idea/
+.vscode/
+
+# Ignore the raw downloaded zip and sql dumps
+classicmodels.zip
+mysqlsampledatabase.sql
+
+# Ignore course PDFs and intermediate planning summaries
+*.pdf
+pdf_layout_summary.md
+industry_grade_agentic_workflow.md
+pdf_summary.txt
+read_pdfs.py
