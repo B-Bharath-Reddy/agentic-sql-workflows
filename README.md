@@ -15,8 +15,7 @@ agentic-sql-workflows/
 ├── data/
 │   └── classicmodels.db       # Generated SQLite database
 ├── scripts/
-│   ├── init_db.py             # Parses & seeds the database
-│   └── clean_ascii.py         # Typography ASCII sanitizer
+│   └── init_db.py             # Parses & seeds the database
 ├── evals/
 │   ├── dataset.json           # Ground-truth evaluation dataset
 │   └── test_customer_agent.py # Component & System-Level Pytest Suite
@@ -38,7 +37,6 @@ agentic-sql-workflows/
 
 ### Utility & Database Scripts
 *   **`scripts/init_db.py`**: A dedicated parser and database initializer. It translates the provided raw `mysqlsampledatabase.sql` dump (which contains MySQL-specific syntax) into compatible SQLite syntax and successfully seeds the `data/classicmodels.db` file.
-*   **`scripts/clean_ascii.py`**: A maintenance utility script used to sanitize documentation. It parses markdown files (like the PDF layout summaries) and converts specialized typography (like smart quotes or em-dashes) into strict, safe US-ASCII characters.
 
 ### Evaluation Scripts
 *   **`evals/test_customer_agent.py`**: The Pytest evaluation suite built for rigorous QA testing. It executes Component-Level evaluations to check if the agent plans and writes SQL correctly in its intermediate steps, as well as System-Level evaluations to ensure the final conversational fact is accurate.

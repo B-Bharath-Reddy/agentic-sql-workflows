@@ -41,9 +41,8 @@ data/*.sqlite3
 .idea/
 .vscode/
 
-# Ignore the raw downloaded zip and sql dumps
+# Ignore the raw downloaded zip
 classicmodels.zip
-mysqlsampledatabase.sql
 
 # Ignore course PDFs and intermediate planning summaries
 *.pdf
@@ -51,3 +50,6 @@ pdf_layout_summary.md
 industry_grade_agentic_workflow.md
 pdf_summary.txt
 read_pdfs.py
+
+# Ignore local maintenance scripts
+scripts/clean_ascii.py
