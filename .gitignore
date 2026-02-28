@@ -53,3 +53,4 @@ read_pdfs.py
 
 # Ignore local maintenance scripts
 scripts/clean_ascii.py
+extract_layout.py
