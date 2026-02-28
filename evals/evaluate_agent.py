@@ -1,5 +1,5 @@
 """
-test_customer_agent.py
+evaluate_agent.py
 
 This module contains the Pytest evaluation suite for the Agentic Workflow application.
 It strictly implements the two primary evaluation patterns defined in Module 4 (M4):
@@ -31,17 +31,17 @@ def test_component_level_sql_generation(agent):
     """
     COMPONENT-LEVEL EVALUATION (M4 Concept):
     We do not care about the final conversational answer here.
-    We test the 'Planner' and 'Tool Calling' components by intercepting the LLM's first thought.
-    We assert that the agent correctly decides to query the database and targets the right table.
+    # We evaluate the 'Planner' and 'Tool Calling' components by intercepting the LLM's first thought.
+    # We assert that the agent correctly decides to query the database and targets the right table.
     """
-    test_case = EVAL_DATA[0] 
-    query = test_case["query"]
-    expected_table = test_case["expected_components"]["target_table"]
+    eval_case = EVAL_DATA[0] 
+    query = eval_case["query"]
+    expected_table = eval_case["expected_components"]["target_table"]
     
     # 1. Initialize messages with the system prompt
     messages = [agent.llm_with_tools.kwargs.get('system_message', None)] # Get system prompt if stored, or just rely on the run method's logic by manually invoking it
     
-    # Actually, the cleanest way to test the FIRST component step is to just invoke the LLM with the query directly
+    # Actually, the cleanest way to evaluate the FIRST component step is to just invoke the LLM with the query directly
     # matching the agent's initial state.
     from langchain_core.messages import SystemMessage
     system_prompt = "You are a helpful customer service AI representing a Classic Vehicle Models company. You have access to a SQL database containing inventory, customers, and orders. CRITICAL INSTRUCTIONS: 1. ALWAYS call get_database_schema() FIRST to understand the table structures before writing any SQL. 2. After reviewing the schema, write a raw SQLite SELECT query using execute_sql_query(query). 3. Never guess column names. Always verify with the schema. 4. Do not return the raw JSON to the user. Synthesize the JSON data into a helpful, conversational answer."
@@ -67,12 +67,12 @@ def test_component_level_sql_generation(agent):
 def test_system_level_end_to_end(agent):
     """
     SYSTEM-LEVEL EVALUATION (M4 Concept):
-    We test the agent as a black box. 
+    We evaluate the agent as a black box. 
     Does the final conversational output contain the correct factual answer from the database?
     """
-    test_case = EVAL_DATA[0] # "How many 1968 Ford Mustangs..."
-    query = test_case["query"]
-    expected_answer = test_case["expected_final_answer"] # "68"
+    eval_case = EVAL_DATA[0] # "How many 1968 Ford Mustangs..."
+    query = eval_case["query"]
+    expected_answer = eval_case["expected_final_answer"] # "68"
     
     # Run the full agent loop
     final_response = agent.run(query)
@@ -83,11 +83,11 @@ def test_system_level_end_to_end(agent):
 def test_system_level_customer_lookup(agent):
     """
     SYSTEM-LEVEL EVALUATION 2:
-    Testing a relationship query (Customers to Employees).
+    Evaluating a relationship query (Customers to Employees).
     """
-    test_case = EVAL_DATA[1] # "Who is the sales representative for the customer named 'Mini Wheels Co.'?"
-    query = test_case["query"]
-    expected_answer = test_case["expected_final_answer"] # "Leslie"
+    eval_case = EVAL_DATA[1] # "Who is the sales representative for the customer named 'Mini Wheels Co.'?"
+    query = eval_case["query"]
+    expected_answer = eval_case["expected_final_answer"] # "Leslie"
     
     # Run the full agent loop
     final_response = agent.run(query)

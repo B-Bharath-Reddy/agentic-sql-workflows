@@ -22,10 +22,10 @@ agentic-sql-workflows/
 ├── logs/
 │   └── agent_run.log          # Agent trace and telemetry for error analysis
 ├── config.yaml                # Global application configuration
-├── main.py                    # Application Entry Point (CLI)
-├── requirements.txt           # Python dependencies
 ├── .env.example               # Template for your Groq API key
 ├── .gitignore                 # Keeps your actual .env private
+├── Makefile                   # [NEW] Cross-Platform Build Commands
+├── .github/                   # [NEW] GitHub Actions CI Pipeline
 └── README.md                  # Project Documentation
 ```
 ### Core Scripts
@@ -39,48 +39,57 @@ agentic-sql-workflows/
 *   **`scripts/init_db.py`**: A dedicated parser and database initializer. It translates the provided raw `mysqlsampledatabase.sql` dump (which contains MySQL-specific syntax) into compatible SQLite syntax and successfully seeds the `data/classicmodels.db` file.
 
 ### Evaluation Scripts
-*   **`evals/test_customer_agent.py`**: The Pytest evaluation suite built for rigorous QA testing. It executes Component-Level evaluations to check if the agent plans and writes SQL correctly in its intermediate steps, as well as System-Level evaluations to ensure the final conversational fact is accurate.
+*   **`tests/`**: A standard Pytest directory containing isolated codebase smoke tests (`test_database.py` and `test_env.py`) using SQLite `:memory:` and environment variable `monkeypatch` mocks.
+*   **`evals/evaluate_agent.py`**: The Pytest evaluation suite built for rigorous LLM QA testing. It executes Component-Level evaluations to check if the agent plans and writes SQL correctly in its intermediate steps, as well as System-Level evaluations to ensure the final conversational fact is accurate.
 
 ## How to Run It
 
-### 1. Setup & Installation
-Ensure you have Python 3.10+ installed. Install the required dependencies:
-```bash
-pip install -r requirements.txt
-```
+This project uses a cross-platform **Makefile** to abstract away complex environment setups across Windows, Mac, and Linux.
 
+### 1. Setup & Environment Variables
+Ensure you have Python 3.12+ installed.
 Copy the provided `.env.example` file to create your own local `.env` file:
 ```bash
 cp .env.example .env
 ```
-Then, open the new `.env` file and insert your actual Groq API key:
-```env
-GROQ_API_KEY=your_actual_api_key_here
-```
+Open `.env` and insert your actual Groq API key.
 
-### 2. Initialize the Database
-Before running the agent, you must create the local SQLite database from the provided SQL dump:
+### 2. Initialize Database & Virtual Environment
+To automatically build a `.venv`, install packages natively, and execute `scripts/init_db.py` to seed the database, run:
 ```bash
-python scripts/init_db.py
+make setup
 ```
-This will create a `data/classicmodels.db` file containing all the customer, order, and inventory data.
 
-### 3. Run the Agent (Manual Interaction)
+### 3. Run CI Smoke Tests
+To run quick, isolated Pytest sanity checks over the `.db` connection and API Environment variables, run:
+```bash
+make ci-smoke
+```
+
+### 4. Run the Agent (Manual Interaction)
 Start the interactive CLI to chat with the agent:
 ```bash
-python main.py
+make run
 ```
 Try asking data-driven questions like:
 - *"How many 1968 Ford Mustangs are currently in stock?"*
 - *"Who is the sales representative for the customer named 'Mini Wheels Co.'?"*
 - *"Can you list the top 3 most expensive products we sell?"*
 
-### 4. Run Automated Evaluations
-To systematically test the agent against the ground-truth cases defined in `evals/dataset.json`, run the Pytest suite:
+### 5. Run Automated LLM Evaluations
+To systematically test the agent against the ground-truth cases defined in `evals/dataset.json`, run the full Pytest suite:
 ```bash
-pytest evals/
+make eval
 ```
-If an evaluation fails, you can perform Error Analysis by reviewing the exact LLM thoughts and actions recorded in `logs/agent_run.log`.
+If an evaluation fails, perform Error Analysis by reviewing the exact LLM thoughts recorded in `logs/agent_run.log`.
+
+---
+
+## Continuous Integration (CI/CD)
+This project includes an automated GitHub Actions pipeline (`.github/workflows/ci.yml`). 
+On every `push` or `pull_request` to the `main` branch, an Ubuntu server will automatically trigger `make setup` -> `make ci-smoke` -> `make eval`. 
+
+*Note: Ensure you add `GROQ_API_KEY` to your GitHub Repository Secrets to allow the pipeline to successfully evaluate the LLM.*
 
 ---
 
