@@ -1,4 +1,4 @@
-.PHONY: help setup activate ci-smoke run eval clean
+.PHONY: help setup activate ci-smoke run eval test coverage clean
 .DEFAULT_GOAL := help
 
 VENV_DIR ?= .venv
@@ -31,6 +31,8 @@ help:
 	@echo "  ci-smoke  Run fast checks to ensure python and DB compile correctly"
 	@echo "  run       Starts the interactive AI CLI agent"
 	@echo "  eval      Run the evaluation suite (Component & System level)"
+	@echo "  test      Run all tests including observability, metrics, tracing"
+	@echo "  coverage  Run tests with coverage reporting"
 	@echo "  clean     Remove build caches and temporary files"
 	@echo ""
 
@@ -72,6 +74,16 @@ run: $(VENV_STAMP)
 eval: $(VENV_STAMP)
 	@echo "Running System and Component Evaluations..."
 	$(VENV_PY) -m pytest evals/evaluate_agent.py
+
+test: $(VENV_STAMP)
+	@echo "Running all tests..."
+	$(VENV_PY) -m pytest -v tests/
+	@echo "All tests passed."
+
+coverage: $(VENV_STAMP)
+	@echo "Running tests with coverage..."
+	$(VENV_PY) -m pytest --cov=src --cov-report=term-missing --cov-report=html tests/
+	@echo "Coverage report generated in htmlcov/"
 
 clean:
 ifdef MSYSTEM

@@ -1,13 +1,145 @@
+# Agentic Workflow Configuration
+# ================================
+
+# LLM Provider Settings
 llm:
   provider: "groq"
   model: "llama-3.3-70b-versatile"
   temperature: 0.0
+  # Token estimation multiplier (characters per token approximation)
+  chars_per_token: 4
+  # Cost tracking (per 1M tokens)
+  cost_per_1m_input_tokens: 0.59
+  cost_per_1m_output_tokens: 0.79
 
+# Agent Behavior Settings
 agent:
   max_iterations: 5
   enable_reflection: true
+  # Timeout for individual LLM calls (seconds)
+  llm_timeout: 60
+  # Enable observability features
+  enable_observability: true
 
+# Logging Configuration
 logging:
   level: "DEBUG"
   file_path: "logs/agent_run.log"
   console_output: true
+  # Structured logging format
+  structured: true
+  # Include trace IDs in logs
+  include_trace_id: true
+  # Sensitive fields to sanitize
+  sanitize_fields:
+    - "api_key"
+    - "password"
+    - "token"
+    - "secret"
+
+# Observability Settings
+observability:
+  # Enable/disable observability features
+  enabled: true
+  # Trace sampling rate (1.0 = 100%, 0.1 = 10%)
+  sampling_rate: 1.0
+  # Export formats
+  export:
+    json: true
+    prometheus: false
+    opentelemetry: false
+  # Retention settings
+  retention:
+    # Max queries to keep in memory
+    max_queries: 1000
+    # Max spans per trace
+    max_spans_per_trace: 100
+
+# Tracing Configuration
+tracing:
+  enabled: true
+  # Include system information in traces
+  include_system_info: true
+  # Span attributes to capture
+  capture_args: true
+  capture_results: true
+  # Max attribute value length
+  max_attribute_length: 1000
+
+# Metrics Configuration
+metrics:
+  enabled: true
+  # Collect detailed metrics
+  detailed: true
+  # Histogram buckets for latency (ms)
+  latency_buckets:
+    - 10
+    - 50
+    - 100
+    - 250
+    - 500
+    - 1000
+    - 2500
+    - 5000
+    - 10000
+  # Export interval (seconds)
+  export_interval: 60
+
+# Debug Mode Settings
+debug:
+  enabled: false
+  verbose: false
+  # Capture message history
+  capture_messages: true
+  # Capture tool outputs
+  capture_tool_outputs: true
+  # Output directory for debug exports
+  output_dir: "logs/debug"
+  # Export formats
+  export_json: true
+  export_html: false
+
+# Database Settings
+database:
+  # Path to SQLite database (relative to project root)
+  path: "data/classicmodels.db"
+  # Maximum result size (characters) before truncation
+  max_result_size: 3000
+  # Connection timeout (seconds)
+  connection_timeout: 30
+  # Enable query logging
+  log_queries: true
+
+# Error Handling Settings
+error_handling:
+  # Retry configuration
+  retry:
+    max_attempts: 3
+    base_delay: 1.0
+    max_delay: 30.0
+    exponential_base: 2
+  # Error categories to retry
+  retryable_errors:
+    - "transient"
+    - "rate_limit"
+    - "timeout"
+  # Circuit breaker settings
+  circuit_breaker:
+    enabled: true
+    failure_threshold: 5
+    recovery_timeout: 60
+
+# Evaluation Settings
+evaluation:
+  # Default evaluation dataset
+  dataset_path: "evals/dataset.json"
+  # Output directory for evaluation results
+  output_dir: "evals/results"
+  # Metrics to compute
+  metrics:
+    - "accuracy"
+    - "latency"
+    - "tool_usage"
+    - "error_rate"
+  # Save detailed results
+  save_detailed_results: true
